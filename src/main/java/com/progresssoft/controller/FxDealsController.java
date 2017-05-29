@@ -1,6 +1,16 @@
 package com.progresssoft.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+
+
+
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,18 +21,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+
+
+import com.progresssoft.model.FxDeals;
+
 @Controller
 @RequestMapping("fxdealsparser")
 public class FxDealsController {
 
-	@PostMapping("/")
-	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-
-		// storageService.store(file);
-		redirectAttributes.addFlashAttribute("message",
-				"You successfully uploaded " + file.getOriginalFilename() + "!");
-
-		return "redirect:/";
+	@PostMapping("/upload")
+	public String handleFileUpload(@RequestParam("csvFile") MultipartFile file, RedirectAttributes redirectAttributes) {
+		System.out.println(file);
+		try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
+			List<FxDeals> strs = br.lines().skip(1).map(str->{
+				StringTokenizer token = new StringTokenizer(str, ",");
+				return new FxDeals(token.nextToken(), token.nextToken(), token.nextToken(), token.nextToken(), token.nextToken(), token.nextToken());
+			}).collect(Collectors.toList());
+			System.out.println(strs);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "redirect:/fxdealsparser/";
 	}
 	
 	@GetMapping("/")

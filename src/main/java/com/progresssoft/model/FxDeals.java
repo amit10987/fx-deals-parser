@@ -1,5 +1,6 @@
 package com.progresssoft.model;
 
+import org.springframework.data.annotation.Id;
 
 /**
  * @author amit kumar
@@ -7,6 +8,7 @@ package com.progresssoft.model;
  */
 public class FxDeals {
 	
+	@Id
 	private String id;
 	private String fromCurrency;
 	private String orderCurrency;

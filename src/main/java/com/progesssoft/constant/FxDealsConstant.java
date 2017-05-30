@@ -15,6 +15,7 @@ public class FxDealsConstant {
 	public static final String FX_DELAS_FILE_UPLOAD_FORM = "fxDealsFileUploadForm";
 	
 	//Other Constants
-	public static final String FILE_UPLOAD_SUCCESS_MSG = "uploadMsg";
+	public static final String FILE_UPLOAD_SUCCESS_CODE = "uploadMsg";
+	public static final String FILE_UPLOAD_SUCCESS_MSG = "File uploaded successfully.";
 	public static final String COMMA_DELIMITER = ",";
 }

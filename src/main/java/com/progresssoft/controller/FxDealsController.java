@@ -36,7 +36,7 @@ public class FxDealsController {
 	@PostMapping(FxDealsConstant.UPLOAD)
 	public String handleFileUpload(@RequestParam("csvFile") MultipartFile file, Model model) {
 		String successMsg = fileParser.processFxDealsFile(file);
-		model.addAttribute(FxDealsConstant.FILE_UPLOAD_SUCCESS_MSG, successMsg);
+		model.addAttribute(FxDealsConstant.FILE_UPLOAD_SUCCESS_CODE, successMsg);
 		return FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM;
 	}
 	

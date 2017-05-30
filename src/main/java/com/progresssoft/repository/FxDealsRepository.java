@@ -1,5 +1,9 @@
 package com.progresssoft.repository;
 
-public interface FxDealsRepository{
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.progresssoft.model.FxDeals;
+
+public interface FxDealsRepository  extends MongoRepository<FxDeals, String>{
 
 }

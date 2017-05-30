@@ -1,5 +1,10 @@
 package com.progresssoft.model;
 
+
+/**
+ * @author amit kumar
+ *
+ */
 public class FxDeals {
 	
 	private String id;
@@ -8,13 +13,28 @@ public class FxDeals {
 	private String toCurrency;
 	private String dealTime;
 	private String amount;
+	private boolean valid;
 	
+	public boolean isValid() {
+		return valid;
+	}
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
+	/**
+	 * @param id
+	 * @param fromCurrency
+	 * @param orderCurrency
+	 * @param toCurrency
+	 * @param dealTime
+	 * @param amount
+	 */
 	public FxDeals(String id, String fromCurrency, String orderCurrency,
 			String toCurrency, String dealTime, String amount) {
 		super();
@@ -24,6 +44,9 @@ public class FxDeals {
 		this.toCurrency = toCurrency;
 		this.dealTime = dealTime;
 		this.amount = amount;
+	}
+	public FxDeals() {
+		// TODO Auto-generated constructor stub
 	}
 	public String getFromCurrency() {
 		return fromCurrency;

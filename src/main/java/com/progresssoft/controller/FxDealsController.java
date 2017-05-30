@@ -1,12 +1,9 @@
 package com.progresssoft.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,32 +11,42 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.progresssoft.model.FxDeals;
+import com.progesssoft.constant.FxDealsConstant;
+import com.progresssoft.service.FileParser;
 
+/**
+ * @author s730732
+ *
+ */
 @Controller
-@RequestMapping("fxdealsparser")
+@RequestMapping(FxDealsConstant.FX_DEALS_PARSER)
 public class FxDealsController {
-
-	@PostMapping("/upload")
-	public String handleFileUpload(@RequestParam("csvFile") MultipartFile file, RedirectAttributes redirectAttributes) {
-		System.out.println(file);
-		try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
-			List<FxDeals> strs = br.lines().skip(1).map(str->{
-				StringTokenizer token = new StringTokenizer(str, ",");
-				return new FxDeals(token.nextToken(), token.nextToken(), token.nextToken(), token.nextToken(), token.nextToken(), token.nextToken());
-			}).collect(Collectors.toList());
-			System.out.println(strs);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "redirect:/fxdealsparser/";
+	
+	private static final Logger LOGGER = Logger.getLogger(FxDealsController.class);
+	
+	@Autowired
+	FileParser fileParser;
+	
+	/**
+	 * @param file
+	 * @param model
+	 * @return
+	 */
+	@PostMapping(FxDealsConstant.UPLOAD)
+	public String handleFileUpload(@RequestParam("csvFile") MultipartFile file, Model model) {
+		String successMsg = fileParser.processFxDealsFile(file);
+		model.addAttribute(FxDealsConstant.FILE_UPLOAD_SUCCESS_MSG, successMsg);
+		return FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM;
 	}
 	
-	@GetMapping("/")
-    public String listUploadedFiles(Model model) throws IOException {
-        return "fxDealsFileUploadForm";
+	/**
+	 * @return
+	 * @throws IOException
+	 */
+	@GetMapping(FxDealsConstant.GET_UPLOAD_FORM)
+    public String getUploadForm() throws IOException {
+        return FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM;
     }
 
 }

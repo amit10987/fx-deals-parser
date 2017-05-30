@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.IntStream;
 
+/**
+ * @author Amit Kumar
+ *
+ */
 public class FxDealsParserUtil {
 
 	private static final String COMMA_DELIMITER = ",";
@@ -14,7 +18,7 @@ public class FxDealsParserUtil {
 
 	public static void main(String[] args) {
 		try (FileWriter fileWriter = new FileWriter("fxDelas.csv")) {
-			fileWriter.append(FILE_HEADER.toString());
+			fileWriter.append(FILE_HEADER);
 			fileWriter.append(NEW_LINE_SEPARATOR);
 			IntStream.range(1, 100000).forEach(i -> {
 				try {

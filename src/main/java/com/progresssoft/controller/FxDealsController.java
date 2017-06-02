@@ -15,10 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.progesssoft.constant.FxDealsConstant;
 import com.progresssoft.exception.FileAlreadExistException;
+import com.progresssoft.exception.FxDealDuplicateKeyException;
+import com.progresssoft.model.FxDealsUploadModel;
 import com.progresssoft.service.FileParser;
 
 /**
- * @author s730732
+ * @author amit
  *
  */
 @Controller
@@ -36,13 +38,18 @@ public class FxDealsController {
 	 * @return
 	 * @throws InterruptedException 
 	 * @throws FileAlreadExistException 
+	 * @throws FxDealDuplicateKeyException 
 	 */
 	@PostMapping(FxDealsConstant.UPLOAD)
-	public String handleFileUpload(@RequestParam("csvFile") MultipartFile file, Model model) throws InterruptedException, FileAlreadExistException {
+	public String handleFileUpload(@RequestParam("csvFile") MultipartFile file, Model model) throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException {
+		LOGGER.debug("handleFileUpload method in FxDealsController started");
+		FxDealsUploadModel dealsModel = new  FxDealsUploadModel();
 		long startTime = System.currentTimeMillis();
 		String successMsg = fileParser.processFxDealsFile(file);
 		long endTime = System.currentTimeMillis();
-		model.addAttribute(FxDealsConstant.FILE_UPLOAD_SUCCESS_CODE, successMsg + "in " + (endTime - startTime)/1000 +" Sec");
+		dealsModel.setUploadMsg(successMsg + "in " + (endTime - startTime)/1000 +" Sec");
+		model.addAttribute("msg", dealsModel);
+		LOGGER.debug("handleFileUpload method in FxDealsController End");
 		return FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM;
 	}
 	
@@ -51,14 +58,35 @@ public class FxDealsController {
 	 * @throws IOException
 	 */
 	@GetMapping(FxDealsConstant.GET_UPLOAD_FORM)
-    public String getUploadForm() throws IOException {
+    public String getUploadForm(Model model) throws IOException {
+		FxDealsUploadModel dealsModel = new  FxDealsUploadModel();
+		model.addAttribute("msg", dealsModel);
         return FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM;
     }
 	
+	/**
+	 * @param ex
+	 * @param model
+	 * @return
+	 */
 	@ExceptionHandler(FileAlreadExistException.class)
 	public String  handleFileAlreadyExistException(FileAlreadExistException ex, Model model){
-		model.addAttribute("errorMsg", "File with same name already exist.");
+		FxDealsUploadModel dealsModel = new  FxDealsUploadModel();
+		dealsModel.setErrorMsg("File with same name already exist.");
+		model.addAttribute("msg", dealsModel);
 		return FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM;
 	}
-
+	
+	/**
+	 * @param ex
+	 * @param model
+	 * @return
+	 */
+	@ExceptionHandler(FxDealDuplicateKeyException.class)
+	public String  handleFxDealDuplicateKeyException(FxDealDuplicateKeyException ex, Model model){
+		FxDealsUploadModel dealsModel = new  FxDealsUploadModel();
+		dealsModel.setErrorMsg(ex.getMessage());
+		model.addAttribute("msg", dealsModel);
+		return FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM;
+	}
 }

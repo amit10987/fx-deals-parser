@@ -1,22 +1,22 @@
 package com.progresssoft.exception;
 
-/**
- * @author amit
- *
- */
-@SuppressWarnings("serial")
-public class FileAlreadExistException extends Exception {
+public class FxDealDuplicateKeyException extends Exception {
 	
 	private String code;
 	private String message;
 	
-	public FileAlreadExistException(){
+	public FxDealDuplicateKeyException(){
 		super();
 	}
 	
-	public FileAlreadExistException(String code, String message) {
+	public FxDealDuplicateKeyException(String code, String message) {
 		super(message);
 		this.code = code;
+		this.message = message;
+	}
+	
+	public FxDealDuplicateKeyException(String message) {
+		super(message);
 		this.message = message;
 	}
 

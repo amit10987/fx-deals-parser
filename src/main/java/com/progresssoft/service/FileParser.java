@@ -3,6 +3,7 @@ package com.progresssoft.service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.progresssoft.exception.FileAlreadExistException;
+import com.progresssoft.exception.FxDealDuplicateKeyException;
 
 /**
  * @author amit
@@ -15,7 +16,8 @@ public interface FileParser {
 	 * @return
 	 * @throws InterruptedException 
 	 * @throws FileAlreadExistException 
+	 * @throws FxDealDuplicateKeyException 
 	 */
-	public String processFxDealsFile(MultipartFile file) throws InterruptedException, FileAlreadExistException;
+	public String processFxDealsFile(MultipartFile file) throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException;
 	
 }

@@ -13,6 +13,7 @@
 
 	<div class="container" id="mydiv">
 	<h3 align = "center" style = "margin-top:10px">Welcome to FX Deals Parser</h3>
+	<p style="color : red;" align ="center" th:text="${errorMsg}" />
 		<div class="col-md-4" style="margin-top:70px;width:100%">
 			<form method="post" enctype="multipart/form-data" action="upload">
 				<input type="file" id="files" name="csvFile" />

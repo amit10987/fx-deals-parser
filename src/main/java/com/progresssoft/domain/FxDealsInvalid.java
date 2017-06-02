@@ -1,11 +1,14 @@
-package com.progresssoft.model;
+package com.progresssoft.domain;
+
+import org.springframework.data.annotation.Id;
 
 /**
  * @author amit kumar
  *
  */
-public class FxDeals {
+public class FxDealsInvalid extends AbstractDeals {
 
+	@Id
 	private String id;
 	private String fromCurrency;
 	private String orderCurrency;
@@ -13,15 +16,6 @@ public class FxDeals {
 	private String dealTime;
 	private String amount;
 	private String fileName;
-	private boolean valid;
-
-	public boolean isValid() {
-		return valid;
-	}
-
-	public void setValid(boolean valid) {
-		this.valid = valid;
-	}
 
 	public String getId() {
 		return id;
@@ -39,7 +33,7 @@ public class FxDeals {
 	 * @param dealTime
 	 * @param amount
 	 */
-	public FxDeals(String id, String fromCurrency, String orderCurrency, String toCurrency, String dealTime,
+	public FxDealsInvalid(String id, String fromCurrency, String orderCurrency, String toCurrency, String dealTime,
 			String amount) {
 		super();
 		this.id = id;
@@ -50,7 +44,8 @@ public class FxDeals {
 		this.amount = amount;
 	}
 
-	public FxDeals() {
+	public FxDealsInvalid() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getFromCurrency() {

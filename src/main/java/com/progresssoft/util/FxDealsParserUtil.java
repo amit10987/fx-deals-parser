@@ -22,13 +22,13 @@ public class FxDealsParserUtil {
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	private static final String FILE_HEADER = "id,fromCurrency,orderCurrency,toCurrency,dealTime,amount";
 	public static void main(String[] args) {
-		try (FileWriter fileWriter = new FileWriter("fxDelas.csv")) {
+		try (FileWriter fileWriter = new FileWriter("fxDeals.csv")) {
 			fileWriter.append(FILE_HEADER);
 			fileWriter.append(NEW_LINE_SEPARATOR);
-			IntStream.rangeClosed(1, 2).forEach(createValidRows(fileWriter));
-			IntStream.rangeClosed(3, 4).forEach(createValidRows(fileWriter));
-			IntStream.rangeClosed(5, 6).forEach(createValidRows(fileWriter));
-			IntStream.rangeClosed(7, 8).forEach(createInvalidRows(fileWriter));
+			IntStream.rangeClosed(1, 30000).forEach(createValidRows(fileWriter, "AED"));
+			IntStream.rangeClosed(1, 30000).forEach(createValidRows(fileWriter, "INR"));
+			IntStream.rangeClosed(60001, 70000).forEach(createValidRows(fileWriter, "USD"));
+			IntStream.rangeClosed(70001, 100000).forEach(createInvalidRows(fileWriter));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,20 +53,20 @@ public class FxDealsParserUtil {
 			}
 		};
 	}
-	private static IntConsumer createValidRows(FileWriter fileWriter) {
+	private static IntConsumer createValidRows(FileWriter fileWriter, String orderCurrency) {
 		return i -> {
 			try {
 				fileWriter.append(Integer.toString(i));
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append("AED");
 				fileWriter.append(COMMA_DELIMITER);
-				fileWriter.append("INR");
+				fileWriter.append(orderCurrency);
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append("INR");
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 				fileWriter.append(COMMA_DELIMITER);
-				fileWriter.append("INR139");
+				fileWriter.append(orderCurrency + "139");
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			} catch (Exception e) {
 				e.printStackTrace();

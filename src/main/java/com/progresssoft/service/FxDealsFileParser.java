@@ -62,8 +62,8 @@ public class FxDealsFileParser implements FileParser {
 	private static final Logger LOGGER = Logger.getLogger(FxDealsFileParser.class);
 	
 	/**
-	 * valid deals consumer, to save valid deals responsible for saving the
-	 * deals in DB
+	 * valid deals consumer, to save valid deals. Responsible for saving the
+	 * valid deals in DB
 	 */
 	BiConsumer<List<AbstractDeals>, Map<String, RuntimeException>> validDealsConsumer = (deals, exceptionsByDealId) -> {
 		deals.stream().map(m -> (FxDealsValid) m).forEach(deal -> {
@@ -74,9 +74,9 @@ public class FxDealsFileParser implements FileParser {
 			}
 		});
 	};
-
+ 
 	/**
-	 * to consume invalid deals, responsible for saving the deals in DB
+	 * to consume invalid deals, responsible for saving the InValid deals in DB
 	 */
 	BiConsumer<List<AbstractDeals>, Map<String, RuntimeException>> invalidDealsConsumer = (deals, exceptionsByDealId) -> {
 		deals.stream().map(m -> (FxDealsInvalid) m).forEach(deal -> {
@@ -97,24 +97,38 @@ public class FxDealsFileParser implements FileParser {
 	@Override
 	public String processFxDealsFile(MultipartFile file) throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException {
 		LOGGER.debug("processFxDealsFile method started");
+		
 		Map<String, RuntimeException> exceptionsByDealId = new ConcurrentHashMap<>();
-		String fileName = file.getOriginalFilename();
+		
 		// if file with same name already exist then throw exception
+		checkIfFileAlreadyExist(file);
+		
+		Map<Boolean, List<FxDeals>> fxDealsMap = getFxDealsModelFromFileStream(file);
+		
+		LOGGER.debug("before saveDataParellel");
+		saveDataParellel(fxDealsMap, exceptionsByDealId);
+		LOGGER.debug("after saveDataParellel");
+		
+		saveCountWithCurrency(fxDealsMap, exceptionsByDealId);
+		
+		//process if there is any exception
+		LOGGER.debug("before processExceptions");
+		processExceptions(exceptionsByDealId);
+		LOGGER.debug("after processExceptions");
+		return FxDealsConstant.FILE_UPLOAD_SUCCESS_MSG;
+	}
+
+	/**
+	 * @param file
+	 * @throws FileAlreadExistException
+	 */
+	private void checkIfFileAlreadyExist(MultipartFile file) throws FileAlreadExistException {
+		String fileName = file.getOriginalFilename();
 		FxDealsValid result = fxDealsValidRepo.findFirstByFileName(fileName);
 		if (null != result) {
 			LOGGER.debug("File already exist");
 			throw new FileAlreadExistException();
 		}
-		Map<Boolean, List<FxDeals>> fxDealsMap = getFxDealsModelFromFileStream(file);
-		LOGGER.debug("before saveDataParellel");
-		saveDataParellel(fxDealsMap, exceptionsByDealId);
-		LOGGER.debug("after saveDataParellel");
-		//process if there is any exception
-		saveCountWithCurrency(fxDealsMap, exceptionsByDealId);
-		LOGGER.debug("before processExceptions");
-		processExceptions(exceptionsByDealId);
-		LOGGER.debug("after processExceptions");
-		return FxDealsConstant.FILE_UPLOAD_SUCCESS_MSG;
 	}
 
 	private void processExceptions(Map<String, RuntimeException> exMap) throws FxDealDuplicateKeyException {

@@ -14,8 +14,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.progesssoft.constant.FxDealsConstant;
-import com.progresssoft.exception.FileAlreadExistException;
+import com.progresssoft.constant.FxDealsConstant;
+import com.progresssoft.exception.FxFileAlreadExistException;
+import com.progresssoft.exception.FxFileNotFoundException;
 import com.progresssoft.exception.FxDealDuplicateKeyException;
 import com.progresssoft.service.FileParser;
 
@@ -39,10 +40,13 @@ public class FxDealsControllerTest {
 	MultipartFile file;
 	
 	@Mock
-	FileAlreadExistException fileAlreadyExistEx;
+	FxFileAlreadExistException fileAlreadyExistEx;
 	
 	@Mock
 	FxDealDuplicateKeyException duplicateKeyEx;
+	
+	@Mock
+	FxFileNotFoundException fileNotFound;
 
 	@Before
 	public void initMocks() {
@@ -56,21 +60,33 @@ public class FxDealsControllerTest {
 	}
 	
 	@Test
-	public void handleFileUploadTest() throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException  {
+	public void handleFileUploadTest() throws InterruptedException, FxFileAlreadExistException, FxDealDuplicateKeyException, FxFileNotFoundException  {
 		String view = controller.handleFileUpload(file, model);
 		Mockito.when(fileParser.processFxDealsFile(file)).thenReturn(FxDealsConstant.FILE_UPLOAD_SUCCESS_MSG);
 		Assert.assertEquals(view, FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM);
 	}
 	
+	@Test(expected = FxFileNotFoundException.class)
+	public void handleFileUploadFileNotFoundTest() throws InterruptedException, FxFileAlreadExistException, FxDealDuplicateKeyException, FxFileNotFoundException  {
+		Mockito.when(file.isEmpty()).thenReturn(true);
+		controller.handleFileUpload(file, model);
+	}
+	
 	@Test
-	public void handleFileAlreadyExistExceptionTest() throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException {
+	public void handleFileAlreadyExistExceptionTest() {
 		String view = controller.handleFileAlreadyExistException(fileAlreadyExistEx, model);
 		Assert.assertEquals(view, FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM);
 	}
 	
 	@Test
-	public void handleFxDealDuplicateKeyExceptionTest() throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException {
+	public void handleFxDealDuplicateKeyExceptionTest()  {
 		String view = controller.handleFxDealDuplicateKeyException(duplicateKeyEx, model);
+		Assert.assertEquals(view, FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM);
+	}
+	
+	@Test
+	public void handleFileNotFoundExceptionTest() {
+		String view = controller.handleFileNotFoundException(fileNotFound, model);
 		Assert.assertEquals(view, FxDealsConstant.FX_DELAS_FILE_UPLOAD_FORM);
 	}
 }

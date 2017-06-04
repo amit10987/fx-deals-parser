@@ -18,9 +18,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.progesssoft.constant.FxDealsConstant;
+import com.progresssoft.constant.FxDealsConstant;
 import com.progresssoft.domain.FxDealsValid;
-import com.progresssoft.exception.FileAlreadExistException;
+import com.progresssoft.exception.FxFileAlreadExistException;
 import com.progresssoft.exception.FxDealDuplicateKeyException;
 import com.progresssoft.repository.DealsCountRepository;
 import com.progresssoft.repository.FxDealsInvalidRepository;
@@ -66,11 +66,11 @@ public class FxDealsFileParserTest {
 	 * File processed successfully
 	 * 
 	 * @throws InterruptedException
-	 * @throws FileAlreadExistException
+	 * @throws FxFileAlreadExistException
 	 * @throws FxDealDuplicateKeyException
 	 */
 	@Test
-	public void processFxDealsFileTest() throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException{
+	public void processFxDealsFileTest() throws InterruptedException, FxFileAlreadExistException, FxDealDuplicateKeyException{
 		String result = fxDealsService.processFxDealsFile(file);
 		Assert.assertTrue(result.equals(FxDealsConstant.FILE_UPLOAD_SUCCESS_MSG));
 	}
@@ -82,11 +82,11 @@ public class FxDealsFileParserTest {
 	 *  
 	 *  
 	 * @throws InterruptedException
-	 * @throws FileAlreadExistException
+	 * @throws FxFileAlreadExistException
 	 * @throws FxDealDuplicateKeyException
 	 */
-	@Test(expected = FileAlreadExistException.class)
-	public void processFxDealsFile_throwsFileAlreadyExistException_Test() throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException{
+	@Test(expected = FxFileAlreadExistException.class)
+	public void processFxDealsFile_throwsFileAlreadyExistException_Test() throws InterruptedException, FxFileAlreadExistException, FxDealDuplicateKeyException{
 		Mockito.when(fxDealsValidRepo.findFirstByFileName(Matchers.anyString())).thenReturn(new FxDealsValid());
 		fxDealsService.processFxDealsFile(file);
 		

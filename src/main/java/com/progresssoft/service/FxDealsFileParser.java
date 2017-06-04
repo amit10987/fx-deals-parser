@@ -28,12 +28,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.progesssoft.constant.FxDealsConstant;
+import com.progresssoft.constant.FxDealsConstant;
 import com.progresssoft.domain.AbstractDeals;
 import com.progresssoft.domain.DealsCount;
 import com.progresssoft.domain.FxDealsInvalid;
 import com.progresssoft.domain.FxDealsValid;
-import com.progresssoft.exception.FileAlreadExistException;
+import com.progresssoft.exception.FxFileAlreadExistException;
 import com.progresssoft.exception.FxDealDuplicateKeyException;
 import com.progresssoft.model.FxDeals;
 import com.progresssoft.repository.DealsCountRepository;
@@ -95,7 +95,7 @@ public class FxDealsFileParser implements FileParser {
 	 * springframework.web.multipart.MultipartFile)
 	 */
 	@Override
-	public String processFxDealsFile(MultipartFile file) throws InterruptedException, FileAlreadExistException, FxDealDuplicateKeyException {
+	public String processFxDealsFile(MultipartFile file) throws InterruptedException, FxFileAlreadExistException, FxDealDuplicateKeyException {
 		LOGGER.debug("processFxDealsFile method started");
 		
 		Map<String, RuntimeException> exceptionsByDealId = new ConcurrentHashMap<>();
@@ -120,14 +120,14 @@ public class FxDealsFileParser implements FileParser {
 
 	/**
 	 * @param file
-	 * @throws FileAlreadExistException
+	 * @throws FxFileAlreadExistException
 	 */
-	private void checkIfFileAlreadyExist(MultipartFile file) throws FileAlreadExistException {
+	private void checkIfFileAlreadyExist(MultipartFile file) throws FxFileAlreadExistException {
 		String fileName = file.getOriginalFilename();
 		FxDealsValid result = fxDealsValidRepo.findFirstByFileName(fileName);
 		if (null != result) {
 			LOGGER.debug("File already exist");
-			throw new FileAlreadExistException();
+			throw new FxFileAlreadExistException();
 		}
 	}
 

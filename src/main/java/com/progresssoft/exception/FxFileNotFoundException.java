@@ -5,16 +5,16 @@ package com.progresssoft.exception;
  *
  */
 @SuppressWarnings("serial")
-public class FileAlreadExistException extends Exception {
+public class FxFileNotFoundException extends Exception {
 	
 	private String code;
 	private String message;
 	
-	public FileAlreadExistException(){
+	public FxFileNotFoundException(){
 		super();
 	}
 	
-	public FileAlreadExistException(String code, String message) {
+	public FxFileNotFoundException(String code, String message) {
 		super(message);
 		this.code = code;
 		this.message = message;

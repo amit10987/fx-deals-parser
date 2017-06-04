@@ -1,4 +1,4 @@
-package com.progesssoft.constant;
+package com.progresssoft.constant;
 
 /**
  * @author amit kumar
